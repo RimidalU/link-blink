@@ -1,27 +1,36 @@
 import { Injectable } from '@nestjs/common';
 
 import { CreateLinkDto } from './dto/create-link.dto';
-import { UpdateLinkDto } from './dto/update-link.dto';
+import { LinkInfoDto } from './dto/link-info.dto';
+import { AnalyticsDto } from './dto/analytics.dto';
 
 @Injectable()
 export class LinksService {
-  create(createLinkDto: CreateLinkDto) {
+  createLink(createLinkDto: CreateLinkDto) {
     return `This action adds a new link with ${JSON.stringify(createLinkDto)} body`;
   }
 
-  findAll() {
-    return `This action returns all links`;
+  getOriginalUrl(shortUrl: string): string | null {
+    return `wwww.google.com/${shortUrl}`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} link`;
+  getLinkInfo(shortUrl: string): LinkInfoDto {
+    const linkInfo: LinkInfoDto = {
+      originalUrl: `original url for ${shortUrl}`,
+      createdAt: new Date(),
+      clickCount: 0,
+    };
+    return linkInfo;
   }
 
-  update(id: number, updateLinkDto: UpdateLinkDto) {
-    return `This action updates a #${id} link with ${JSON.stringify(updateLinkDto)} body`;
+  deleteLink(shortUrl: string) {
+    return `This action removes a #${shortUrl} link`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} link`;
+  getAnalytics(shortUrl: string): AnalyticsDto {
+    return {
+      clickCount: shortUrl.length,
+      lastIps: [],
+    };
   }
 }

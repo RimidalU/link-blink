@@ -3,41 +3,49 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
+  Res,
+  HttpStatus,
 } from '@nestjs/common';
+import { Response } from 'express';
 
 import { LinksService } from './links.service';
 import { CreateLinkDto } from './dto/create-link.dto';
-import { UpdateLinkDto } from './dto/update-link.dto';
+import { LinkInfoDto } from './dto/link-info.dto';
+import { AnalyticsDto } from './dto/analytics.dto';
 
 @Controller('links')
 export class LinksController {
   constructor(private readonly linksService: LinksService) {}
 
-  @Post()
+  @Post('shorten')
   create(@Body() createLinkDto: CreateLinkDto) {
-    return this.linksService.create(createLinkDto);
+    return this.linksService.createLink(createLinkDto);
   }
 
-  @Get()
-  findAll() {
-    return this.linksService.findAll();
+  @Get(':shortUrl')
+  redirect(@Param('shortUrl') shortUrl: string, @Res() res: Response) {
+    const originalUrl = this.linksService.getOriginalUrl(shortUrl);
+
+    if (!originalUrl) {
+      return res.status(HttpStatus.NOT_FOUND).send('Not found');
+    }
+    return res.redirect(originalUrl);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.linksService.findOne(+id);
+  @Get('info/:shortUrl')
+  getInfo(@Param('shortUrl') shortUrl: string): LinkInfoDto {
+    return this.linksService.getLinkInfo(shortUrl);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateLinkDto: UpdateLinkDto) {
-    return this.linksService.update(+id, updateLinkDto);
+  @Delete('delete/:shortUrl')
+  delete(@Param('shortUrl') shortUrl: string) {
+    return this.linksService.deleteLink(shortUrl);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.linksService.remove(+id);
+  @Get('analytics/:shortUrl')
+  getAnalytics(@Param('shortUrl') shortUrl: string): AnalyticsDto {
+    return this.linksService.getAnalytics(shortUrl);
   }
 }
