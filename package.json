@@ -1,5 +1,7 @@
 {
     "devDependencies": {
+        "@commitlint/cli": "^19.8.1",
+        "@types/node": "^22.15.29",
         "eslint-plugin-prettier": "^5.4.1",
         "husky": "^9.1.7",
         "lint-staged": "^16.1.0",
