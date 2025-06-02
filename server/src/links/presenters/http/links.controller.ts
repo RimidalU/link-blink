@@ -10,17 +10,21 @@ import {
 } from '@nestjs/common'
 import { Response } from 'express'
 import { CreateLinkCommand } from '@src/links/application/commands/create-link.command'
+import { ApiTags } from '@nestjs/swagger'
 
 import { LinksService } from '../../application/links.service'
 
 import { LinkInfoDto } from './dto/link-info.dto'
 import { AnalyticsDto } from './dto/analytics.dto'
 import { CreateLinkDto } from './dto/create-link.dto'
+import { CreateLinkSwagger } from './decorators/create-link.swagger.decorator'
 
+@ApiTags('Links routes')
 @Controller('links')
 export class LinksController {
     constructor(private readonly linksService: LinksService) {}
 
+    @CreateLinkSwagger()
     @Post('shorten')
     create(@Body() createLinkDto: CreateLinkDto) {
         return this.linksService.createLink(
