@@ -28,5 +28,8 @@
         "prepare": "husky",
         "commitlint": "commitlint --edit",
         "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
+    },
+    "dependencies": {
+        "@nestjs/config": "^4.0.2"
     }
 }
