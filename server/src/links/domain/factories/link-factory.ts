@@ -12,6 +12,7 @@ export class LinkFactory {
         const { id, shortCode, originalUrl, expiresAt } = params
         const createdAt = new Date()
         const clickCount = 0
+        const lastIps: string[] = []
 
         return new Link(
             id,
@@ -19,6 +20,7 @@ export class LinkFactory {
             originalUrl,
             createdAt,
             clickCount,
+            lastIps,
             expiresAt
         )
     }

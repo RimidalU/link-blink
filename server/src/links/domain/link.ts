@@ -5,6 +5,7 @@ class Link {
         private originalUrl: string,
         private createdAt: Date,
         private clickCount: number,
+        private lastIps?: string[],
         private expiresAt?: Date
     ) {}
 }
