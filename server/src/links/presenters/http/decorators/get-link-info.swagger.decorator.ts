@@ -1,0 +1,28 @@
+import { applyDecorators } from '@nestjs/common'
+import {
+    ApiInternalServerErrorResponse,
+    ApiNotFoundResponse,
+    ApiOperation,
+    ApiResponse,
+} from '@nestjs/swagger'
+
+import { LinkInfoDto } from '../dto/link-info.dto'
+
+export function GetLinkInfoSwagger() {
+    return applyDecorators(
+        ApiOperation({ summary: 'Get link info' }),
+        ApiNotFoundResponse({
+            description: 'Not Found',
+            // type: LinkNotFoundDTO,
+        }),
+        ApiInternalServerErrorResponse({
+            description: 'Internal server error',
+            // type: InternalServerErrorResponseDto,
+        }),
+        ApiResponse({
+            status: 200,
+            description: 'Link info',
+            type: LinkInfoDto,
+        })
+    )
+}

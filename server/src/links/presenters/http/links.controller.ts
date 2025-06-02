@@ -20,6 +20,7 @@ import { CreateLinkDto } from './dto/create-link.dto'
 import { CreateLinkSwagger } from './decorators/create-link.swagger.decorator'
 import { DeleteLinkSwagger } from './decorators/delete-link.swagger.decorator'
 import { RedirectSwagger } from './decorators/redirect.swagger.decorator'
+import { GetLinkInfoSwagger } from './decorators/get-link-info.swagger.decorator'
 
 @ApiTags('Links routes')
 @Controller('links')
@@ -50,6 +51,7 @@ export class LinksController {
         return res.redirect(originalUrl)
     }
 
+    @GetLinkInfoSwagger()
     @Get('info/:shortUrl')
     getInfo(@Param('shortUrl') shortUrl: string): LinkInfoDto {
         return this.linksService.getLinkInfo(shortUrl)
