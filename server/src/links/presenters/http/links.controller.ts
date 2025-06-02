@@ -9,7 +9,7 @@ import {
     HttpStatus,
 } from '@nestjs/common'
 import { Response } from 'express'
-import { CreateLinkCommand } from 'src/links/application/commands/create-link.command'
+import { CreateLinkCommand } from '@src/links/application/commands/create-link.command'
 
 import { LinksService } from '../../application/links.service'
 

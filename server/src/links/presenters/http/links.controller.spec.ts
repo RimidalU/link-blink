@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing'
-
-import { LinksService } from '../../application/links.service'
+import { LinksService } from '@src/links/application/links.service'
 
 import { LinksController } from './links.controller'
 
