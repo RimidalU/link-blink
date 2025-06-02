@@ -21,6 +21,7 @@ import { CreateLinkSwagger } from './decorators/create-link.swagger.decorator'
 import { DeleteLinkSwagger } from './decorators/delete-link.swagger.decorator'
 import { RedirectSwagger } from './decorators/redirect.swagger.decorator'
 import { GetLinkInfoSwagger } from './decorators/get-link-info.swagger.decorator'
+import { GetLinkAnalyticsSwagger } from './decorators/get-link-analytics.swagger.decorator'
 
 @ApiTags('Links routes')
 @Controller('links')
@@ -63,6 +64,7 @@ export class LinksController {
         return this.linksService.deleteLink(shortUrl)
     }
 
+    @GetLinkAnalyticsSwagger()
     @Get('analytics/:shortUrl')
     getAnalytics(@Param('shortUrl') shortUrl: string): AnalyticsDto {
         return this.linksService.getAnalytics(shortUrl)
