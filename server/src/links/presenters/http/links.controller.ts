@@ -19,6 +19,7 @@ import { AnalyticsDto } from './dto/analytics.dto'
 import { CreateLinkDto } from './dto/create-link.dto'
 import { CreateLinkSwagger } from './decorators/create-link.swagger.decorator'
 import { DeleteLinkSwagger } from './decorators/delete-link.swagger.decorator'
+import { RedirectSwagger } from './decorators/redirect.swagger.decorator'
 
 @ApiTags('Links routes')
 @Controller('links')
@@ -37,6 +38,8 @@ export class LinksController {
         )
     }
 
+    @RedirectSwagger()
+    // @ApiExcludeEndpoint()
     @Get(':shortUrl')
     redirect(@Param('shortUrl') shortUrl: string, @Res() res: Response) {
         const originalUrl = this.linksService.getOriginalUrl(shortUrl)
