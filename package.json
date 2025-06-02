@@ -1,4 +1,14 @@
 {
+    "name": "link-blink",
+    "version": "0.0.1",
+    "description": "LinkBlink fullstack project",
+    "author": "RimidalU",
+    "license": "BSD 3-Clause",
+    "scripts": {
+        "prepare": "husky",
+        "commitlint": "commitlint --edit",
+        "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
+    },
     "devDependencies": {
         "@commitlint/cli": "^19.8.1",
         "@eslint/compat": "^1.2.9",
@@ -23,11 +33,6 @@
         "**/*.{json,yaml,yml,toml,css,md,MD}": [
             "prettier --write"
         ]
-    },
-    "scripts": {
-        "prepare": "husky",
-        "commitlint": "commitlint --edit",
-        "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
     },
     "dependencies": {
         "@nestjs/config": "^4.0.2",
