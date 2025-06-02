@@ -1,12 +1,12 @@
 class Link {
     constructor(
-        private id: number,
-        private shortCode: string,
-        private originalUrl: string,
-        private createdAt: Date,
-        private clickCount: number,
-        private lastIps?: string[],
-        private expiresAt?: Date
+        public id: number,
+        public shortCode: string,
+        public originalUrl: string,
+        public createdAt: Date,
+        public clickCount: number,
+        public lastIps?: string[],
+        public expiresAt?: Date
     ) {}
 }
 
