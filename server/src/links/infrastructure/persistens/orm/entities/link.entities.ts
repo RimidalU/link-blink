@@ -6,7 +6,7 @@ import {
 } from 'typeorm'
 
 @Entity()
-export class Link {
+export class LinkEntity {
     @PrimaryGeneratedColumn()
     id: number
 
