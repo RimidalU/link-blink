@@ -9,7 +9,7 @@ import { LinkRepository } from '@src/links/application/ports/links.repository'
 import { LinkMapper } from '../mappers/link.mapper'
 import { LinkNotFoundException } from '../../exception/link-not-found.exception'
 import { InternalServerException } from '../../exception/internal-server-exception.exception'
-import { LinkEntity } from '../entities/link.entities'
+import { LinkEntity } from '../entities/link.entity'
 
 @Injectable()
 export class TypeOrmLinkRepository implements LinkRepository {

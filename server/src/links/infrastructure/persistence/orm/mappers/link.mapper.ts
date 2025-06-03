@@ -2,7 +2,7 @@ import { Link } from '@src/links/domain/link'
 import { LinkInfoDto } from '@src/links/presenters/http/dto/link-info.dto'
 import { AnalyticsDto } from '@src/links/presenters/http/dto/analytics.dto'
 
-import { LinkEntity } from '../entities/link.entities'
+import { LinkEntity } from '../entities/link.entity'
 
 export class LinkMapper {
     // Entity → Domain
