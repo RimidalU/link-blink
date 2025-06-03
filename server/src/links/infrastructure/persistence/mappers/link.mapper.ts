@@ -2,7 +2,7 @@ import { Link } from '@src/links/domain/link'
 import { LinkInfoDto } from '@src/links/presenters/http/dto/link-info.dto'
 import { AnalyticsDto } from '@src/links/presenters/http/dto/analytics.dto'
 
-import { LinkEntity } from '../entities/link.entity'
+import { LinkEntity } from '../in-memory/entities/link.entities'
 
 export class LinkMapper {
     // Entity → Domain
@@ -21,10 +21,7 @@ export class LinkMapper {
     // Domain → Entity
     static toPersistence(link: Link): LinkEntity {
         const entity = new LinkEntity()
-
-        if (link.id !== -1) {
-            entity.id = link.id
-        }
+        entity.id = link.id
         entity.alias = link.alias
         entity.originalUrl = link.originalUrl
         entity.createdAt = link.createdAt
@@ -33,6 +30,11 @@ export class LinkMapper {
         entity.lastIps = link.lastIps
 
         return entity
+    }
+
+    // Domain → CreateLinkResponseDto
+    static toCreateLinkResponseDto(link: Link): string {
+        return link.alias
     }
 
     // Domain → LinkInfoDto
