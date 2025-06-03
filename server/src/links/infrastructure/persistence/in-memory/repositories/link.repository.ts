@@ -32,13 +32,13 @@ export class InMemoryLinkRepository implements LinkRepository {
         }
     }
 
-    async findByShortCode(shortCode: string): Promise<Link | null> {
+    async findByAlias(alias: string): Promise<Link | null> {
         try {
             const linkEntity = Array.from(this.links.values()).find(
-                (link) => link.shortCode === shortCode
+                (link) => link.alias === alias
             )
             if (!linkEntity) {
-                throw new LinkNotFoundException(shortCode)
+                throw new LinkNotFoundException(alias)
             }
             return Promise.resolve(LinkMapper.toDomain(linkEntity))
         } catch {
@@ -46,9 +46,9 @@ export class InMemoryLinkRepository implements LinkRepository {
         }
     }
 
-    async deleteByShortCode(shortCode: string): Promise<void> {
+    async deleteByAlias(alias: string): Promise<void> {
         try {
-            const linkEntity = await this.findByShortCode(shortCode)
+            const linkEntity = await this.findByAlias(alias)
             if (!linkEntity) {
                 return
             }
@@ -58,11 +58,11 @@ export class InMemoryLinkRepository implements LinkRepository {
         }
     }
 
-    async getInfo(shortCode: string): Promise<LinkInfoDto> {
+    async getInfo(alias: string): Promise<LinkInfoDto> {
         try {
-            const linkEntity = await this.findByShortCode(shortCode)
+            const linkEntity = await this.findByAlias(alias)
             if (!linkEntity) {
-                throw new LinkNotFoundException(shortCode)
+                throw new LinkNotFoundException(alias)
             }
             const link = LinkMapper.toDomain(linkEntity)
 
@@ -76,11 +76,11 @@ export class InMemoryLinkRepository implements LinkRepository {
         }
     }
 
-    async updateAnalytics(shortCode: string, ip: string): Promise<void> {
+    async updateAnalytics(alias: string, ip: string): Promise<void> {
         try {
-            const link = await this.findByShortCode(shortCode)
+            const link = await this.findByAlias(alias)
             if (!link) {
-                throw new LinkNotFoundException(shortCode)
+                throw new LinkNotFoundException(alias)
             }
             link.clickCount += 1
             link.lastIps = link.lastIps || []
@@ -94,11 +94,11 @@ export class InMemoryLinkRepository implements LinkRepository {
         }
     }
 
-    async getAnalytics(shortCode: string): Promise<AnalyticsDto> {
+    async getAnalytics(alias: string): Promise<AnalyticsDto> {
         try {
-            const link = await this.findByShortCode(shortCode)
+            const link = await this.findByAlias(alias)
             if (!link) {
-                throw new LinkNotFoundException(shortCode)
+                throw new LinkNotFoundException(alias)
             }
             return Promise.resolve({
                 clickCount: link.clickCount,

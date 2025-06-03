@@ -11,7 +11,7 @@ export class LinkEntity {
     id: number
 
     @Column({ unique: true })
-    shortCode: string
+    alias: string
 
     @Column()
     originalUrl: string

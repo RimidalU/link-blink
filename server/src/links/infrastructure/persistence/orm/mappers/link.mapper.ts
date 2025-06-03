@@ -9,7 +9,7 @@ export class LinkMapper {
     static toDomain(linkEntity: LinkEntity): Link {
         return new Link(
             linkEntity.id,
-            linkEntity.shortCode,
+            linkEntity.alias,
             linkEntity.originalUrl,
             linkEntity.createdAt,
             linkEntity.clickCount,
@@ -22,7 +22,7 @@ export class LinkMapper {
     static toPersistence(link: Link): LinkEntity {
         const entity = new LinkEntity()
         entity.id = link.id
-        entity.shortCode = link.shortCode
+        entity.alias = link.alias
         entity.originalUrl = link.originalUrl
         entity.createdAt = link.createdAt
         entity.clickCount = link.clickCount

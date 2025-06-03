@@ -30,13 +30,13 @@ export class TypeOrmLinkRepository implements LinkRepository {
         }
     }
 
-    async findByShortCode(shortCode: string): Promise<Link | null> {
+    async findByAlias(alias: string): Promise<Link | null> {
         try {
             const linkEntity = await this.repository.findOne({
-                where: { shortCode },
+                where: { alias },
             })
             if (!linkEntity) {
-                throw new LinkNotFoundException(shortCode)
+                throw new LinkNotFoundException(alias)
             }
             return LinkMapper.toDomain(linkEntity)
         } catch {
@@ -44,15 +44,15 @@ export class TypeOrmLinkRepository implements LinkRepository {
         }
     }
 
-    async deleteByShortCode(shortCode: string): Promise<void> {
-        await this.repository.delete({ shortCode })
+    async deleteByAlias(alias: string): Promise<void> {
+        await this.repository.delete({ alias })
     }
 
-    async getInfo(shortCode: string): Promise<LinkInfoDto> {
+    async getInfo(alias: string): Promise<LinkInfoDto> {
         try {
-            const linkEntity = await this.findByShortCode(shortCode)
+            const linkEntity = await this.findByAlias(alias)
             if (!linkEntity) {
-                throw new LinkNotFoundException(shortCode)
+                throw new LinkNotFoundException(alias)
             }
             const link = LinkMapper.toDomain(linkEntity)
 
@@ -66,11 +66,11 @@ export class TypeOrmLinkRepository implements LinkRepository {
         }
     }
 
-    async updateAnalytics(shortCode: string, ip: string): Promise<void> {
+    async updateAnalytics(alias: string, ip: string): Promise<void> {
         try {
-            const link = await this.findByShortCode(shortCode)
+            const link = await this.findByAlias(alias)
             if (!link) {
-                throw new LinkNotFoundException(shortCode)
+                throw new LinkNotFoundException(alias)
             }
             link.clickCount += 1
             link.lastIps = link.lastIps || []
@@ -84,11 +84,11 @@ export class TypeOrmLinkRepository implements LinkRepository {
         }
     }
 
-    async getAnalytics(shortCode: string): Promise<AnalyticsDto> {
+    async getAnalytics(alias: string): Promise<AnalyticsDto> {
         try {
-            const link = await this.findByShortCode(shortCode)
+            const link = await this.findByAlias(alias)
             if (!link) {
-                throw new LinkNotFoundException(shortCode)
+                throw new LinkNotFoundException(alias)
             }
             return {
                 clickCount: link.clickCount,

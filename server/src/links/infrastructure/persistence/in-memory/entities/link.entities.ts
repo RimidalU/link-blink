@@ -1,6 +1,6 @@
 export class LinkEntity {
     id: number
-    shortCode: string
+    alias: string
     originalUrl: string
     createdAt: Date
     clickCount: number

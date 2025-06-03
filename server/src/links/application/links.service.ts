@@ -15,7 +15,7 @@ export class LinksService {
     ) {}
     createLink(createLinkDto: CreateLinkCommand) {
         const newLink = LinkFactory.create({
-            shortCode: createLinkDto.alias,
+            alias: createLinkDto.alias,
             originalUrl: createLinkDto.originalUrl,
             expiresAt: createLinkDto.expiresAt,
         })

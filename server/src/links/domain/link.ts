@@ -1,7 +1,7 @@
 class Link {
     constructor(
         public id: number,
-        public shortCode: string,
+        public alias: string,
         public originalUrl: string,
         public createdAt: Date,
         public clickCount: number,

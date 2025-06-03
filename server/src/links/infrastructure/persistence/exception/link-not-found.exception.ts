@@ -1,7 +1,7 @@
 import { NotFoundException } from '@nestjs/common'
 
 export class LinkNotFoundException extends NotFoundException {
-    constructor(shortCode: string) {
-        super(`Link with shortcode '${shortCode}' not found.`)
+    constructor(alias: string) {
+        super(`Link with alias '${alias}' not found.`)
     }
 }
