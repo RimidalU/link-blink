@@ -9,12 +9,13 @@ import { LinkRepository } from '@src/links/application/ports/links.repository'
 import { LinkMapper } from '../mappers/link.mapper'
 import { LinkNotFoundException } from '../../exception/link-not-found.exception'
 import { InternalServerException } from '../../exception/internal-server-exception.exception'
+import { LinkEntity } from '../entities/link.entities'
 
 @Injectable()
 export class TypeOrmLinkRepository implements LinkRepository {
     constructor(
-        @InjectRepository(Link)
-        private readonly repository: Repository<Link>
+        @InjectRepository(LinkEntity)
+        private readonly repository: Repository<LinkEntity>
     ) {}
 
     async create(link: Link): Promise<Link> {
@@ -36,7 +37,7 @@ export class TypeOrmLinkRepository implements LinkRepository {
                 where: { alias },
             })
             if (!linkEntity) {
-                throw new LinkNotFoundException(alias)
+                return null
             }
             return LinkMapper.toDomain(linkEntity)
         } catch {

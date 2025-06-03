@@ -13,7 +13,6 @@ import { InternalServerException } from '../../exception/internal-server-excepti
 export class InMemoryLinkRepository implements LinkRepository {
     private readonly links = new Map<number, LinkEntity>()
     private currentId = 0
-    constructor() {}
 
     async create(link: Link): Promise<Link> {
         try {
@@ -42,7 +41,7 @@ export class InMemoryLinkRepository implements LinkRepository {
                 (link) => link.alias === alias
             )
             if (!linkEntity) {
-                throw new LinkNotFoundException(alias)
+                return Promise.resolve(null)
             }
             return Promise.resolve(LinkMapper.toDomain(linkEntity))
         } catch {

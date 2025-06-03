@@ -14,7 +14,7 @@ import { AliasAlreadyInUseException } from './exception/alias-already-in-use.exc
 export class LinksService {
     constructor(
         private readonly linkRepository: LinkRepository,
-        private readonly LinkFactory: LinkFactory
+        private readonly linkFactory: LinkFactory
     ) {}
     async createLink(createLinkDto: CreateLinkCommand): Promise<Link> {
         let { alias } = createLinkDto
@@ -29,7 +29,7 @@ export class LinksService {
             }
         }
 
-        const newLink = LinkFactory.create({
+        const newLink = this.linkFactory.create({
             alias: alias,
             originalUrl: originalUrl,
             expiresAt: expiresAt,

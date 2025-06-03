@@ -10,10 +10,10 @@ import { LinksService } from './links.service'
     providers: [LinksService, LinkFactory],
 })
 export class LinksModule {
-    static withInfrastructure(LinksInfrastructureModule: Type | DynamicModule) {
+    static withInfrastructure(linksInfrastructureModule: Type | DynamicModule) {
         return {
             module: LinksModule,
-            imports: [LinksInfrastructureModule],
+            imports: [linksInfrastructureModule],
         }
     }
 }
