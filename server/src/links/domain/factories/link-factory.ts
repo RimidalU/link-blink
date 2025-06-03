@@ -1,7 +1,6 @@
 import { Link } from '../link'
 
 interface CreateLinkParams {
-    id: number
     alias: string
     originalUrl: string
     expiresAt?: Date
@@ -9,7 +8,8 @@ interface CreateLinkParams {
 
 export class LinkFactory {
     static create(params: CreateLinkParams): Link {
-        const { id, alias, originalUrl, expiresAt } = params
+        const { alias, originalUrl, expiresAt } = params
+        const id = -1
         const createdAt = new Date()
         const clickCount = 0
         const lastIps: string[] = []

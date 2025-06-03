@@ -21,7 +21,10 @@ export class LinkMapper {
     // Domain → Entity
     static toPersistence(link: Link): LinkEntity {
         const entity = new LinkEntity()
-        entity.id = link.id
+
+        if (link.id !== -1) {
+            entity.id = link.id
+        }
         entity.alias = link.alias
         entity.originalUrl = link.originalUrl
         entity.createdAt = link.createdAt
