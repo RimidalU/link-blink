@@ -8,6 +8,7 @@ import { LinkRepository } from '@src/links/application/ports/links.repository'
 
 import { LinkMapper } from '../mappers/link.mapper'
 import { LinkNotFoundException } from '../../exception/link-not-found.exception'
+import { InternalServerException } from '../../exception/internal-server-exception.exception'
 
 @Injectable()
 export class TypeOrmLinkRepository implements LinkRepository {
@@ -17,21 +18,30 @@ export class TypeOrmLinkRepository implements LinkRepository {
     ) {}
 
     async create(link: Link): Promise<Link> {
-        const presentersLinkModel = LinkMapper.toPersistence(link)
+        try {
+            const presentersLinkModel = LinkMapper.toPersistence(link)
 
-        const newLinkEntity = await this.repository.save(presentersLinkModel)
+            const newLinkEntity =
+                await this.repository.save(presentersLinkModel)
 
-        return LinkMapper.toDomain(newLinkEntity)
+            return LinkMapper.toDomain(newLinkEntity)
+        } catch {
+            throw new InternalServerException()
+        }
     }
 
     async findByShortCode(shortCode: string): Promise<Link | null> {
-        const linkEntity = await this.repository.findOne({
-            where: { shortCode },
-        })
-        if (!linkEntity) {
-            throw new LinkNotFoundException(shortCode)
+        try {
+            const linkEntity = await this.repository.findOne({
+                where: { shortCode },
+            })
+            if (!linkEntity) {
+                throw new LinkNotFoundException(shortCode)
+            }
+            return LinkMapper.toDomain(linkEntity)
+        } catch {
+            throw new InternalServerException()
         }
-        return LinkMapper.toDomain(linkEntity)
     }
 
     async deleteByShortCode(shortCode: string): Promise<void> {
@@ -39,41 +49,53 @@ export class TypeOrmLinkRepository implements LinkRepository {
     }
 
     async getInfo(shortCode: string): Promise<LinkInfoDto> {
-        const linkEntity = await this.findByShortCode(shortCode)
-        if (!linkEntity) {
-            throw new LinkNotFoundException(shortCode)
-        }
-        const link = LinkMapper.toDomain(linkEntity)
+        try {
+            const linkEntity = await this.findByShortCode(shortCode)
+            if (!linkEntity) {
+                throw new LinkNotFoundException(shortCode)
+            }
+            const link = LinkMapper.toDomain(linkEntity)
 
-        return {
-            originalUrl: link.originalUrl,
-            createdAt: link.createdAt,
-            clickCount: link.clickCount,
+            return {
+                originalUrl: link.originalUrl,
+                createdAt: link.createdAt,
+                clickCount: link.clickCount,
+            }
+        } catch {
+            throw new InternalServerException()
         }
     }
 
     async updateAnalytics(shortCode: string, ip: string): Promise<void> {
-        const link = await this.findByShortCode(shortCode)
-        if (!link) {
-            throw new LinkNotFoundException(shortCode)
+        try {
+            const link = await this.findByShortCode(shortCode)
+            if (!link) {
+                throw new LinkNotFoundException(shortCode)
+            }
+            link.clickCount += 1
+            link.lastIps = link.lastIps || []
+            link.lastIps.unshift(ip)
+            if (link.lastIps.length > 5) {
+                link.lastIps = link.lastIps.slice(0, 5)
+            }
+            await this.repository.save(link)
+        } catch {
+            throw new InternalServerException()
         }
-        link.clickCount += 1
-        link.lastIps = link.lastIps || []
-        link.lastIps.unshift(ip)
-        if (link.lastIps.length > 5) {
-            link.lastIps = link.lastIps.slice(0, 5)
-        }
-        await this.repository.save(link)
     }
 
     async getAnalytics(shortCode: string): Promise<AnalyticsDto> {
-        const link = await this.findByShortCode(shortCode)
-        if (!link) {
-            throw new LinkNotFoundException(shortCode)
-        }
-        return {
-            clickCount: link.clickCount,
-            lastIps: link.lastIps || [],
+        try {
+            const link = await this.findByShortCode(shortCode)
+            if (!link) {
+                throw new LinkNotFoundException(shortCode)
+            }
+            return {
+                clickCount: link.clickCount,
+                lastIps: link.lastIps || [],
+            }
+        } catch {
+            throw new InternalServerException()
         }
     }
 }
