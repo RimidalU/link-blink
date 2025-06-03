@@ -6,6 +6,8 @@ import {
     ApiOperation,
 } from '@nestjs/swagger'
 
+import { CreateLinkResponseDto } from '../dto/create-link-response.dto'
+
 export function CreateLinkSwagger() {
     return applyDecorators(
         ApiOperation({ summary: 'Create new short link' }),
@@ -19,7 +21,7 @@ export function CreateLinkSwagger() {
         }),
         ApiCreatedResponse({
             description: 'Link created',
-            // type: SuccessResponseDto,
+            type: CreateLinkResponseDto,
         })
     )
 }
