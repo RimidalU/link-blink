@@ -1,4 +1,5 @@
 import { DynamicModule, Module, Type } from '@nestjs/common'
+import { ConfigModule } from '@nestjs/config'
 
 import { LinksController } from '../presenters/http/links.controller'
 import { LinkFactory } from '../domain/factories/link-factory'
@@ -13,7 +14,7 @@ export class LinksModule {
     static withInfrastructure(linksInfrastructureModule: Type | DynamicModule) {
         return {
             module: LinksModule,
-            imports: [linksInfrastructureModule],
+            imports: [ConfigModule, linksInfrastructureModule],
         }
     }
 }

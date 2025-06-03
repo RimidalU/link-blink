@@ -9,5 +9,6 @@ export const envSchema = z.object({
     DATABASE_PASSWORD: z.coerce.string().min(1),
     DATABASE_PORT: z.coerce.number().min(4),
     DATABASE_HOST: z.coerce.string().min(1),
+    API_URL: z.coerce.string().min(1),
 })
 export type Env = z.infer<typeof envSchema>

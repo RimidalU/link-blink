@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Param, Delete, Res } from '@nestjs/common'
 import { Response } from 'express'
 import { CreateLinkCommand } from '@src/links/application/commands/create-link.command'
 import { ApiTags } from '@nestjs/swagger'
+import { ConfigService } from '@nestjs/config'
 
 import { LinksService } from '../../application/links.service'
 
@@ -13,22 +14,31 @@ import { DeleteLinkSwagger } from './decorators/delete-link.swagger.decorator'
 import { RedirectSwagger } from './decorators/redirect.swagger.decorator'
 import { GetLinkInfoSwagger } from './decorators/get-link-info.swagger.decorator'
 import { GetLinkAnalyticsSwagger } from './decorators/get-link-analytics.swagger.decorator'
+import { CreateLinkResponseDto } from './dto/create-link-response.dto'
 
 @ApiTags('Links routes')
 @Controller('links')
 export class LinksController {
-    constructor(private readonly linksService: LinksService) {}
+    constructor(
+        private readonly linksService: LinksService,
+        private configService: ConfigService
+    ) {}
 
     @CreateLinkSwagger()
     @Post('shorten')
-    async create(@Body() createLinkDto: CreateLinkDto) {
-        return await this.linksService.createLink(
+    async create(
+        @Body() createLinkDto: CreateLinkDto
+    ): Promise<CreateLinkResponseDto> {
+        const alias = await this.linksService.createLink(
             new CreateLinkCommand(
                 createLinkDto.originalUrl,
                 createLinkDto.alias,
                 createLinkDto.expiresAt
             )
         )
+        const apiUrl = await this.configService.get<Promise<string>>('API_URL')
+
+        return { shortUrl: `${apiUrl}/links/${alias}` }
     }
 
     @RedirectSwagger()
