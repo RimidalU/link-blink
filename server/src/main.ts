@@ -6,7 +6,11 @@ import { AppModule } from './app.module'
 import { initSwagger } from './app.swagger'
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule)
+    const app = await NestFactory.create(
+        AppModule.register({
+            driver: 'in-memory',
+        })
+    )
 
     app.useGlobalPipes(
         new ValidationPipe({

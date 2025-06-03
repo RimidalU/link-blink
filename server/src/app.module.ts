@@ -10,11 +10,7 @@ import { LinksInfrastructureModule } from './links/infrastructure/persistence/li
 import { DatabaseModule } from './database/database.module'
 
 @Module({
-    imports: [
-        ConfigModule.forRoot(getConfigModuleConfig()),
-        LinksModule,
-        DatabaseModule,
-    ],
+    imports: [ConfigModule.forRoot(getConfigModuleConfig()), DatabaseModule],
     controllers: [AppController],
     providers: [AppService],
 })
