@@ -2,13 +2,25 @@ import { Injectable } from '@nestjs/common'
 
 import { LinkInfoDto } from '../presenters/http/dto/link-info.dto'
 import { AnalyticsDto } from '../presenters/http/dto/analytics.dto'
+import { LinkFactory } from '../domain/factories/link-factory'
 
 import { CreateLinkCommand } from './commands/create-link.command'
+import { LinkRepository } from './ports/links.repository'
 
 @Injectable()
 export class LinksService {
+    constructor(
+        private readonly linkRepository: LinkRepository,
+        private readonly LinkFactory: LinkFactory
+    ) {}
     createLink(createLinkDto: CreateLinkCommand) {
-        return `This action adds a new link with ${JSON.stringify(createLinkDto)} body`
+        const newLink = LinkFactory.create({
+            shortCode: createLinkDto.alias,
+            originalUrl: createLinkDto.originalUrl,
+            expiresAt: createLinkDto.expiresAt,
+        })
+
+        return this.linkRepository.create(newLink)
     }
 
     getOriginalUrl(shortUrl: string): string | null {
