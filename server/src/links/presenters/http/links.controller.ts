@@ -30,8 +30,8 @@ export class LinksController {
 
     @CreateLinkSwagger()
     @Post('shorten')
-    create(@Body() createLinkDto: CreateLinkDto) {
-        return this.linksService.createLink(
+    async create(@Body() createLinkDto: CreateLinkDto) {
+        return await this.linksService.createLink(
             new CreateLinkCommand(
                 createLinkDto.originalUrl,
                 createLinkDto.alias,

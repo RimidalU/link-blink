@@ -12,11 +12,15 @@ import { InternalServerException } from '../../exception/internal-server-excepti
 @Injectable()
 export class InMemoryLinkRepository implements LinkRepository {
     private readonly links = new Map<number, LinkEntity>()
+    private currentId = 0
     constructor() {}
 
     async create(link: Link): Promise<Link> {
         try {
+            this.currentId++
+
             const presentersLinkModel = LinkMapper.toPersistence(link)
+            presentersLinkModel.id = this.currentId
 
             this.links.set(presentersLinkModel.id, presentersLinkModel)
 

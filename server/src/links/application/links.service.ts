@@ -3,9 +3,12 @@ import { Injectable } from '@nestjs/common'
 import { LinkInfoDto } from '../presenters/http/dto/link-info.dto'
 import { AnalyticsDto } from '../presenters/http/dto/analytics.dto'
 import { LinkFactory } from '../domain/factories/link-factory'
+import { Link } from '../domain/link'
 
 import { CreateLinkCommand } from './commands/create-link.command'
 import { LinkRepository } from './ports/links.repository'
+import { generateAlias } from './utils/generate-alias'
+import { AliasAlreadyInUseException } from './exception/alias-already-in-use.exception'
 
 @Injectable()
 export class LinksService {
@@ -13,11 +16,23 @@ export class LinksService {
         private readonly linkRepository: LinkRepository,
         private readonly LinkFactory: LinkFactory
     ) {}
-    createLink(createLinkDto: CreateLinkCommand) {
+    async createLink(createLinkDto: CreateLinkCommand): Promise<Link> {
+        let { alias } = createLinkDto
+        const { originalUrl, expiresAt } = createLinkDto
+
+        if (!alias) {
+            alias = generateAlias()
+        } else {
+            const exists = await this.linkRepository.findByAlias(alias)
+            if (exists) {
+                throw new AliasAlreadyInUseException(alias)
+            }
+        }
+
         const newLink = LinkFactory.create({
-            alias: createLinkDto.alias,
-            originalUrl: createLinkDto.originalUrl,
-            expiresAt: createLinkDto.expiresAt,
+            alias: alias,
+            originalUrl: originalUrl,
+            expiresAt: expiresAt,
         })
 
         return this.linkRepository.create(newLink)
