@@ -5,7 +5,7 @@ import {
     CreateDateColumn,
 } from 'typeorm'
 
-@Entity()
+@Entity('links')
 export class LinkEntity {
     @PrimaryGeneratedColumn()
     id: number
