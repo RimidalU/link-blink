@@ -1,13 +1,4 @@
-import {
-    Controller,
-    Get,
-    Post,
-    Body,
-    Param,
-    Delete,
-    Res,
-    HttpStatus,
-} from '@nestjs/common'
+import { Controller, Get, Post, Body, Param, Delete, Res } from '@nestjs/common'
 import { Response } from 'express'
 import { CreateLinkCommand } from '@src/links/application/commands/create-link.command'
 import { ApiTags } from '@nestjs/swagger'
@@ -43,12 +34,12 @@ export class LinksController {
     @RedirectSwagger()
     // @ApiExcludeEndpoint()
     @Get(':shortUrl')
-    redirect(@Param('shortUrl') shortUrl: string, @Res() res: Response) {
-        const originalUrl = this.linksService.getOriginalUrl(shortUrl)
+    async redirect(
+        @Param('shortUrl') shortUrl: string,
+        @Res() res: Response
+    ): Promise<void> {
+        const originalUrl = await this.linksService.getOriginalUrl(shortUrl)
 
-        if (!originalUrl) {
-            return res.status(HttpStatus.NOT_FOUND).send('Not found')
-        }
         return res.redirect(originalUrl)
     }
 

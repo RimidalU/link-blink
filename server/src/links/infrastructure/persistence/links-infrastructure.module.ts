@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common'
+import { DRIVER_TYPE } from '@src/common/interfaces/application-bootstrap-options'
 
 import { InMemoryLinkPersistenceModule } from './in-memory/in-memory-persistence.module'
 import { OrmLinkPersistenceModule } from './orm/orm-persistence.module'
-
-type DRIVER_TYPE = 'orm' | 'in-memory'
 
 @Module({})
 export class LinksInfrastructureModule {
