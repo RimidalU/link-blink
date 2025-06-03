@@ -7,7 +7,7 @@ interface CreateLinkParams {
 }
 
 export class LinkFactory {
-    static create(params: CreateLinkParams): Link {
+    create(params: CreateLinkParams): Link {
         const { alias, originalUrl, expiresAt } = params
         const id = -1
         const createdAt = new Date()
