@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common'
 import { LinkInfoDto } from '../presenters/http/dto/link-info.dto'
 import { AnalyticsDto } from '../presenters/http/dto/analytics.dto'
 import { LinkFactory } from '../domain/factories/link-factory'
-import { Link } from '../domain/link'
 
 import { CreateLinkCommand } from './commands/create-link.command'
 import { LinkRepository } from './ports/links.repository'
@@ -16,7 +15,7 @@ export class LinksService {
         private readonly linkRepository: LinkRepository,
         private readonly linkFactory: LinkFactory
     ) {}
-    async createLink(createLinkDto: CreateLinkCommand): Promise<Link> {
+    async createLink(createLinkDto: CreateLinkCommand): Promise<string> {
         let { alias } = createLinkDto
         const { originalUrl, expiresAt } = createLinkDto
 

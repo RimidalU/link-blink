@@ -6,10 +6,10 @@ import { AnalyticsDto } from '@src/links/presenters/http/dto/analytics.dto'
 import { LinkInfoDto } from '@src/links/presenters/http/dto/link-info.dto'
 import { LinkRepository } from '@src/links/application/ports/links.repository'
 
-import { LinkMapper } from '../mappers/link.mapper'
 import { LinkNotFoundException } from '../../exception/link-not-found.exception'
 import { InternalServerException } from '../../exception/internal-server-exception.exception'
 import { LinkEntity } from '../entities/link.entity'
+import { LinkMapper } from '../../mappers/link.mapper'
 
 @Injectable()
 export class TypeOrmLinkRepository implements LinkRepository {
@@ -18,14 +18,14 @@ export class TypeOrmLinkRepository implements LinkRepository {
         private readonly repository: Repository<LinkEntity>
     ) {}
 
-    async create(link: Link): Promise<Link> {
+    async create(link: Link): Promise<string> {
         try {
             const presentersLinkModel = LinkMapper.toPersistence(link)
 
             const newLinkEntity =
                 await this.repository.save(presentersLinkModel)
 
-            return LinkMapper.toDomain(newLinkEntity)
+            return LinkMapper.toCreateLinkResponseDto(newLinkEntity)
         } catch {
             throw new InternalServerException()
         }

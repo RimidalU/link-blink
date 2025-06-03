@@ -4,7 +4,7 @@ import { AnalyticsDto } from '@src/links/presenters/http/dto/analytics.dto'
 import { LinkInfoDto } from '@src/links/presenters/http/dto/link-info.dto'
 import { LinkRepository } from '@src/links/application/ports/links.repository'
 
-import { LinkMapper } from '../mappers/link.mapper'
+import { LinkMapper } from '../../mappers/link.mapper'
 import { LinkNotFoundException } from '../../exception/link-not-found.exception'
 import { LinkEntity } from '../entities/link.entities'
 import { InternalServerException } from '../../exception/internal-server-exception.exception'
@@ -14,7 +14,7 @@ export class InMemoryLinkRepository implements LinkRepository {
     private readonly links = new Map<number, LinkEntity>()
     private currentId = 0
 
-    async create(link: Link): Promise<Link> {
+    async create(link: Link): Promise<string> {
         try {
             this.currentId++
 
@@ -29,7 +29,9 @@ export class InMemoryLinkRepository implements LinkRepository {
                 throw new InternalServerException()
             }
 
-            return Promise.resolve(LinkMapper.toDomain(newLinkEntity))
+            return Promise.resolve(
+                LinkMapper.toCreateLinkResponseDto(newLinkEntity)
+            )
         } catch {
             throw new InternalServerException()
         }
