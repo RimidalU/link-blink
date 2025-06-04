@@ -8,6 +8,7 @@ import { CreateLinkCommand } from './commands/create-link.command'
 import { LinkRepository } from './ports/links.repository'
 import { generateAlias } from './utils/generate-alias'
 import { AliasAlreadyInUseException } from './exception/alias-already-in-use.exception'
+import { LinkNotFoundException } from './exception/link-not-found.exception'
 
 @Injectable()
 export class LinksService {
@@ -37,17 +38,22 @@ export class LinksService {
         return this.linkRepository.create(newLink)
     }
 
-    getOriginalUrl(shortUrl: string): string | null {
-        return `https://www.google.com/search?q=${shortUrl}`
+    async getOriginalUrl(alias: string): Promise<string> {
+        const link = await this.linkRepository.findByAlias(alias)
+        if (!link) {
+            throw new LinkNotFoundException(alias)
+        }
+
+        return link.alias
     }
 
-    getLinkInfo(shortUrl: string): LinkInfoDto {
+    async getLinkInfo(shortUrl: string): Promise<LinkInfoDto> {
         const linkInfo: LinkInfoDto = {
             originalUrl: `original url for ${shortUrl}`,
             createdAt: new Date(),
             clickCount: 0,
         }
-        return linkInfo
+        return await Promise.resolve(linkInfo)
     }
 
     deleteLink(shortUrl: string) {
