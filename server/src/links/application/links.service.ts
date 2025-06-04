@@ -43,17 +43,18 @@ export class LinksService {
         if (!link) {
             throw new LinkNotFoundException(alias)
         }
-
+        //TODO: implement check  IP
+        await this.linkRepository.updateAnalytics(alias, 'ip')
         return link.alias
     }
 
-    async getLinkInfo(shortUrl: string): Promise<LinkInfoDto> {
-        const linkInfo: LinkInfoDto = {
-            originalUrl: `original url for ${shortUrl}`,
-            createdAt: new Date(),
-            clickCount: 0,
+    async getLinkInfo(alias: string): Promise<LinkInfoDto> {
+        const link = await this.linkRepository.findByAlias(alias)
+        if (!link) {
+            throw new LinkNotFoundException(alias)
         }
-        return await Promise.resolve(linkInfo)
+
+        return await this.linkRepository.getInfo(alias)
     }
 
     deleteLink(shortUrl: string) {

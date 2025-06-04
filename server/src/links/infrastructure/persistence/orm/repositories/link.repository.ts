@@ -55,13 +55,7 @@ export class TypeOrmLinkRepository implements LinkRepository {
             if (!linkEntity) {
                 throw new LinkNotFoundException(alias)
             }
-            const link = LinkMapper.toDomain(linkEntity)
-
-            return {
-                originalUrl: link.originalUrl,
-                createdAt: link.createdAt,
-                clickCount: link.clickCount,
-            }
+            return LinkMapper.toInfoDto(linkEntity)
         } catch {
             throw new InternalServerException()
         }

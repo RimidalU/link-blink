@@ -55,8 +55,8 @@ export class LinksController {
 
     @GetLinkInfoSwagger()
     @Get('info/:shortUrl')
-    getInfo(@Param('shortUrl') shortUrl: string): LinkInfoDto {
-        return this.linksService.getLinkInfo(shortUrl)
+    async getInfo(@Param('shortUrl') shortUrl: string): Promise<LinkInfoDto> {
+        return await this.linksService.getLinkInfo(shortUrl)
     }
 
     @DeleteLinkSwagger()

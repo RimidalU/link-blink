@@ -69,13 +69,9 @@ export class InMemoryLinkRepository implements LinkRepository {
             if (!linkEntity) {
                 throw new LinkNotFoundException(alias)
             }
-            const link = LinkMapper.toDomain(linkEntity)
+            const link = LinkMapper.toInfoDto(linkEntity)
 
-            return Promise.resolve({
-                originalUrl: link.originalUrl,
-                createdAt: link.createdAt,
-                clickCount: link.clickCount,
-            })
+            return Promise.resolve(link)
         } catch {
             throw new InternalServerException()
         }
