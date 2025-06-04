@@ -6,6 +6,9 @@ import {
     ApiResponse,
 } from '@nestjs/swagger'
 
+import { InternalServerErrorResponseDto } from '../dto/internal--server-error-response.dto'
+import { LinkNotFoundDTO } from '../dto/link-note-found.response.dto'
+
 export function RedirectSwagger() {
     return applyDecorators(
         ApiOperation({
@@ -20,17 +23,16 @@ To test the redirect, use your browser or cURL—there will be no error in these
         }),
         ApiNotFoundResponse({
             description: 'Not Found',
-            // type: LinkNotFoundDTO,
+            type: LinkNotFoundDTO,
         }),
         ApiInternalServerErrorResponse({
             description: 'Internal server error',
-            // type: InternalServerErrorResponseDto,
+            type: InternalServerErrorResponseDto,
         }),
         ApiResponse({
             status: 302,
             description:
                 'Redirect to original link. Note: Testing this redirect in Swagger UI will result in an error, as Swagger UI does not support redirects to external URLs via AJAX.',
-            // type: SuccessResponseDto,
         })
     )
 }
