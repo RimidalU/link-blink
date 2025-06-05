@@ -1,5 +1,14 @@
-import { Controller, Get, Post, Body, Param, Delete, Res } from '@nestjs/common'
-import { Response } from 'express'
+import {
+    Controller,
+    Get,
+    Post,
+    Body,
+    Param,
+    Delete,
+    Res,
+    Req,
+} from '@nestjs/common'
+import { Response, Request } from 'express'
 import { CreateLinkCommand } from '@src/links/application/commands/create-link.command'
 import { ApiTags } from '@nestjs/swagger'
 import { ConfigService } from '@nestjs/config'
@@ -46,9 +55,13 @@ export class LinksController {
     @Get(':shortUrl')
     async redirect(
         @Param('shortUrl') shortUrl: string,
-        @Res() res: Response
+        @Res() res: Response,
+        @Req() req: Request
     ): Promise<void> {
-        const originalUrl = await this.linksService.getOriginalUrl(shortUrl)
+        const originalUrl = await this.linksService.getOriginalUrl(
+            shortUrl,
+            req
+        )
 
         return res.redirect(originalUrl)
     }
