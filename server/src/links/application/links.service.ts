@@ -57,8 +57,8 @@ export class LinksService {
         return await this.linkRepository.getInfo(alias)
     }
 
-    deleteLink(shortUrl: string) {
-        return `This action removes a #${shortUrl} link`
+    async deleteLink(alias: string): Promise<string> {
+        return await this.linkRepository.deleteByAlias(alias)
     }
 
     getAnalytics(shortUrl: string): AnalyticsDto {

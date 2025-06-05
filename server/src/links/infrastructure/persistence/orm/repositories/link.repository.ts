@@ -45,8 +45,20 @@ export class TypeOrmLinkRepository implements LinkRepository {
         }
     }
 
-    async deleteByAlias(alias: string): Promise<void> {
-        await this.repository.delete({ alias })
+    async deleteByAlias(alias: string): Promise<string> {
+        try {
+            const result = await this.repository.delete({ alias })
+
+            if (!result.affected) {
+                throw new LinkNotFoundException(alias)
+            }
+            return alias
+        } catch (error) {
+            if (error instanceof LinkNotFoundException) {
+                throw error
+            }
+            throw new InternalServerException()
+        }
     }
 
     async getInfo(alias: string): Promise<LinkInfoDto> {

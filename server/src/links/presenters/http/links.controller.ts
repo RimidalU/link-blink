@@ -61,8 +61,8 @@ export class LinksController {
 
     @DeleteLinkSwagger()
     @Delete('delete/:shortUrl')
-    delete(@Param('shortUrl') shortUrl: string) {
-        return this.linksService.deleteLink(shortUrl)
+    async delete(@Param('shortUrl') shortUrl: string): Promise<string> {
+        return await this.linksService.deleteLink(shortUrl)
     }
 
     @GetLinkAnalyticsSwagger()

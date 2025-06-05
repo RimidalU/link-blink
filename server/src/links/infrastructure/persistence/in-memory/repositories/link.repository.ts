@@ -51,14 +51,18 @@ export class InMemoryLinkRepository implements LinkRepository {
         }
     }
 
-    async deleteByAlias(alias: string): Promise<void> {
+    async deleteByAlias(alias: string): Promise<string> {
         try {
             const linkEntity = await this.findByAlias(alias)
             if (!linkEntity) {
-                return
+                throw new LinkNotFoundException(alias)
             }
             this.links.delete(linkEntity.id)
-        } catch {
+            return alias
+        } catch (error) {
+            if (error instanceof LinkNotFoundException) {
+                throw error
+            }
             throw new InternalServerException()
         }
     }
