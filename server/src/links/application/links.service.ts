@@ -45,7 +45,7 @@ export class LinksService {
         }
         //TODO: implement check  IP
         await this.linkRepository.updateAnalytics(alias, 'ip')
-        return link.alias
+        return link.originalUrl
     }
 
     async getLinkInfo(alias: string): Promise<LinkInfoDto> {
