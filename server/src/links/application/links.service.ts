@@ -61,10 +61,12 @@ export class LinksService {
         return await this.linkRepository.deleteByAlias(alias)
     }
 
-    getAnalytics(shortUrl: string): AnalyticsDto {
-        return {
-            clickCount: shortUrl.length,
-            lastIps: [],
+    async getAnalytics(alias: string): Promise<AnalyticsDto> {
+        const link = await this.linkRepository.findByAlias(alias)
+        if (!link) {
+            throw new LinkNotFoundException(alias)
         }
+
+        return await this.linkRepository.getAnalytics(alias)
     }
 }

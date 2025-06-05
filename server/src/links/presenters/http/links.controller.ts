@@ -67,7 +67,9 @@ export class LinksController {
 
     @GetLinkAnalyticsSwagger()
     @Get('analytics/:shortUrl')
-    getAnalytics(@Param('shortUrl') shortUrl: string): AnalyticsDto {
-        return this.linksService.getAnalytics(shortUrl)
+    async getAnalytics(
+        @Param('shortUrl') shortUrl: string
+    ): Promise<AnalyticsDto> {
+        return await this.linksService.getAnalytics(shortUrl)
     }
 }
