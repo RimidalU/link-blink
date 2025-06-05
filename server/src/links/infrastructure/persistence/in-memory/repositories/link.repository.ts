@@ -76,7 +76,10 @@ export class InMemoryLinkRepository implements LinkRepository {
             const link = LinkMapper.toInfoDto(linkEntity)
 
             return Promise.resolve(link)
-        } catch {
+        } catch (error) {
+            if (error instanceof LinkNotFoundException) {
+                throw error
+            }
             throw new InternalServerException()
         }
     }
@@ -94,7 +97,10 @@ export class InMemoryLinkRepository implements LinkRepository {
                 link.lastIps = link.lastIps.slice(0, 5)
             }
             this.links.set(link.id, link)
-        } catch {
+        } catch (error) {
+            if (error instanceof LinkNotFoundException) {
+                throw error
+            }
             throw new InternalServerException()
         }
     }
@@ -109,7 +115,10 @@ export class InMemoryLinkRepository implements LinkRepository {
                 clickCount: link.clickCount,
                 lastIps: link.lastIps || [],
             })
-        } catch {
+        } catch (error) {
+            if (error instanceof LinkNotFoundException) {
+                throw error
+            }
             throw new InternalServerException()
         }
     }

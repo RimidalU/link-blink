@@ -68,7 +68,10 @@ export class TypeOrmLinkRepository implements LinkRepository {
                 throw new LinkNotFoundException(alias)
             }
             return LinkMapper.toInfoDto(linkEntity)
-        } catch {
+        } catch (error) {
+            if (error instanceof LinkNotFoundException) {
+                throw error
+            }
             throw new InternalServerException()
         }
     }
@@ -86,7 +89,10 @@ export class TypeOrmLinkRepository implements LinkRepository {
                 link.lastIps = link.lastIps.slice(0, 5)
             }
             await this.repository.save(link)
-        } catch {
+        } catch (error) {
+            if (error instanceof LinkNotFoundException) {
+                throw error
+            }
             throw new InternalServerException()
         }
     }
@@ -101,7 +107,10 @@ export class TypeOrmLinkRepository implements LinkRepository {
                 clickCount: link.clickCount,
                 lastIps: link.lastIps || [],
             }
-        } catch {
+        } catch (error) {
+            if (error instanceof LinkNotFoundException) {
+                throw error
+            }
             throw new InternalServerException()
         }
     }
