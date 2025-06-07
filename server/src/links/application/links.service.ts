@@ -10,6 +10,7 @@ import { generateAlias } from './utils/generate-alias'
 import { AliasAlreadyInUseException } from './exception/alias-already-in-use.exception'
 import { LinkNotFoundException } from './exception/link-not-found.exception'
 import { GetOriginalUrlCommand } from './commands/get-original-url.command'
+import { GetLinkInfoCommand } from './commands/get-link-info.command'
 
 @Injectable()
 export class LinksService {
@@ -52,12 +53,14 @@ export class LinksService {
         return link.originalUrl
     }
 
-    async getLinkInfo(alias: string): Promise<LinkInfoDto> {
+    async getLinkInfo(
+        getLinkInfoDTO: GetLinkInfoCommand
+    ): Promise<LinkInfoDto> {
+        const { alias } = getLinkInfoDTO
         const link = await this.linkRepository.findByAlias(alias)
         if (!link) {
             throw new LinkNotFoundException(alias)
         }
-
         return await this.linkRepository.getInfo(alias)
     }
 

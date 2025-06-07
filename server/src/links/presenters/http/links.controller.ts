@@ -5,6 +5,7 @@ import { ApiTags } from '@nestjs/swagger'
 import { ConfigService } from '@nestjs/config'
 import { ClientIp } from '@src/common/decorators/client-ip.decorator'
 import { GetOriginalUrlCommand } from '@src/links/application/commands/get-original-url.command'
+import { GetLinkInfoCommand } from '@src/links/application/commands/get-link-info.command'
 
 import { LinksService } from '../../application/links.service'
 
@@ -54,14 +55,15 @@ export class LinksController {
         const originalUrl = await this.linksService.getOriginalUrl(
             new GetOriginalUrlCommand(shortUrl, ip)
         )
-
         return res.redirect(originalUrl)
     }
 
     @GetLinkInfoSwagger()
     @Get('info/:shortUrl')
     async getInfo(@Param('shortUrl') shortUrl: string): Promise<LinkInfoDto> {
-        return await this.linksService.getLinkInfo(shortUrl)
+        return await this.linksService.getLinkInfo(
+            new GetLinkInfoCommand(shortUrl)
+        )
     }
 
     @DeleteLinkSwagger()
