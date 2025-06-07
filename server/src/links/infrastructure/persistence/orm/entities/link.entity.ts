@@ -22,7 +22,7 @@ export class LinkEntity {
     @Column({ default: 0 })
     clickCount: number
 
-    @Column('simple-array', { nullable: true })
+    @Column('text', { array: true, nullable: true })
     lastIps?: string[]
 
     @Column({ nullable: true })
