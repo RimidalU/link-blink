@@ -84,11 +84,11 @@ export class InMemoryLinkRepository implements LinkRepository {
         }
     }
 
-    async updateAnalytics(alias: string, ip: string): Promise<void> {
+    async getOriginalUrl(alias: string, ip: string): Promise<Link | null> {
         try {
             const link = await this.findByAlias(alias)
             if (!link) {
-                throw new LinkNotFoundException(alias)
+                return null
             }
             link.clickCount += 1
             link.lastIps = link.lastIps || []
@@ -96,11 +96,9 @@ export class InMemoryLinkRepository implements LinkRepository {
             if (link.lastIps.length > 5) {
                 link.lastIps = link.lastIps.slice(0, 5)
             }
-            this.links.set(link.id, link)
-        } catch (error) {
-            if (error instanceof LinkNotFoundException) {
-                throw error
-            }
+            this.links.set(link.id, LinkMapper.toPersistence(link))
+            return link
+        } catch {
             throw new InternalServerException()
         }
     }
