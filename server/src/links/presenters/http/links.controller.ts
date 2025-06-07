@@ -6,6 +6,7 @@ import { ConfigService } from '@nestjs/config'
 import { ClientIp } from '@src/common/decorators/client-ip.decorator'
 import { GetOriginalUrlCommand } from '@src/links/application/commands/get-original-url.command'
 import { GetLinkInfoCommand } from '@src/links/application/commands/get-link-info.command'
+import { DeleteLinkCommand } from '@src/links/application/commands/delete-link.command'
 
 import { LinksService } from '../../application/links.service'
 
@@ -69,7 +70,9 @@ export class LinksController {
     @DeleteLinkSwagger()
     @Delete('delete/:shortUrl')
     async delete(@Param('shortUrl') shortUrl: string): Promise<string> {
-        return await this.linksService.deleteLink(shortUrl)
+        return await this.linksService.deleteLink(
+            new DeleteLinkCommand(shortUrl)
+        )
     }
 
     @GetLinkAnalyticsSwagger()

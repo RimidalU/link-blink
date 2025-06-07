@@ -11,6 +11,7 @@ import { AliasAlreadyInUseException } from './exception/alias-already-in-use.exc
 import { LinkNotFoundException } from './exception/link-not-found.exception'
 import { GetOriginalUrlCommand } from './commands/get-original-url.command'
 import { GetLinkInfoCommand } from './commands/get-link-info.command'
+import { DeleteLinkCommand } from './commands/delete-link.command'
 
 @Injectable()
 export class LinksService {
@@ -64,7 +65,8 @@ export class LinksService {
         return await this.linkRepository.getInfo(alias)
     }
 
-    async deleteLink(alias: string): Promise<string> {
+    async deleteLink(deleteLinkDTO: DeleteLinkCommand): Promise<string> {
+        const { alias } = deleteLinkDTO
         return await this.linkRepository.deleteByAlias(alias)
     }
 
