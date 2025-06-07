@@ -12,6 +12,7 @@ import { LinkNotFoundException } from './exception/link-not-found.exception'
 import { GetOriginalUrlCommand } from './commands/get-original-url.command'
 import { GetLinkInfoCommand } from './commands/get-link-info.command'
 import { DeleteLinkCommand } from './commands/delete-link.command'
+import { GetLinkAnalyticsCommand } from './commands/get-link-analytics.command'
 
 @Injectable()
 export class LinksService {
@@ -70,7 +71,10 @@ export class LinksService {
         return await this.linkRepository.deleteByAlias(alias)
     }
 
-    async getAnalytics(alias: string): Promise<AnalyticsDto> {
+    async getAnalytics(
+        getLinkAnalyticsDTO: GetLinkAnalyticsCommand
+    ): Promise<AnalyticsDto> {
+        const { alias } = getLinkAnalyticsDTO
         const link = await this.linkRepository.findByAlias(alias)
         if (!link) {
             throw new LinkNotFoundException(alias)

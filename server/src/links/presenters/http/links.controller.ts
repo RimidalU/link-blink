@@ -7,6 +7,7 @@ import { ClientIp } from '@src/common/decorators/client-ip.decorator'
 import { GetOriginalUrlCommand } from '@src/links/application/commands/get-original-url.command'
 import { GetLinkInfoCommand } from '@src/links/application/commands/get-link-info.command'
 import { DeleteLinkCommand } from '@src/links/application/commands/delete-link.command'
+import { GetLinkAnalyticsCommand } from '@src/links/application/commands/get-link-analytics.command'
 
 import { LinksService } from '../../application/links.service'
 
@@ -80,6 +81,8 @@ export class LinksController {
     async getAnalytics(
         @Param('shortUrl') shortUrl: string
     ): Promise<AnalyticsDto> {
-        return await this.linksService.getAnalytics(shortUrl)
+        return await this.linksService.getAnalytics(
+            new GetLinkAnalyticsCommand(shortUrl)
+        )
     }
 }
