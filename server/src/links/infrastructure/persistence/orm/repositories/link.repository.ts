@@ -75,24 +75,30 @@ export class TypeOrmLinkRepository implements LinkRepository {
             throw new InternalServerException()
         }
     }
-
-    async updateAnalytics(alias: string, ip: string): Promise<void> {
+    async getOriginalUrl(alias: string, ip: string): Promise<Link | null> {
         try {
-            const link = await this.findByAlias(alias)
-            if (!link) {
-                throw new LinkNotFoundException(alias)
+            const updateLastIpsSql = `(array_prepend(:ip, COALESCE("lastIps", '{}')))[1:5]`
+
+            const result = await this.repository
+                .createQueryBuilder()
+                .update(LinkEntity)
+                .set({
+                    clickCount: () => `"clickCount" + 1`,
+                    lastIps: () => updateLastIpsSql,
+                })
+                .where('alias = :alias', { alias })
+                .setParameters({ ip })
+                .returning('*')
+                .execute()
+
+            const updatedEntities = result.raw as LinkEntity[]
+            const updatedEntity = updatedEntities[0]
+
+            if (!updatedEntity) {
+                return null
             }
-            link.clickCount += 1
-            link.lastIps = link.lastIps || []
-            link.lastIps.unshift(ip)
-            if (link.lastIps.length > 5) {
-                link.lastIps = link.lastIps.slice(0, 5)
-            }
-            await this.repository.save(link)
-        } catch (error) {
-            if (error instanceof LinkNotFoundException) {
-                throw error
-            }
+            return LinkMapper.toDomain(updatedEntity)
+        } catch {
             throw new InternalServerException()
         }
     }
