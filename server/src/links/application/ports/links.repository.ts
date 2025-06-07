@@ -7,6 +7,6 @@ export abstract class LinkRepository {
     abstract findByAlias(alias: string): Promise<Link | null>
     abstract deleteByAlias(alias: string): Promise<string>
     abstract getInfo(alias: string): Promise<LinkInfoDto>
-    abstract updateAnalytics(alias: string, ip: string): Promise<void>
+    abstract getOriginalUrl(alias: string, ip: string): Promise<Link | null>
     abstract getAnalytics(alias: string): Promise<AnalyticsDto>
 }
