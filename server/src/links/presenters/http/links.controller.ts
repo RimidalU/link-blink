@@ -4,6 +4,7 @@ import { CreateLinkCommand } from '@src/links/application/commands/create-link.c
 import { ApiTags } from '@nestjs/swagger'
 import { ConfigService } from '@nestjs/config'
 import { ClientIp } from '@src/common/decorators/client-ip.decorator'
+import { GetOriginalUrlCommand } from '@src/links/application/commands/get-original-url.command'
 
 import { LinksService } from '../../application/links.service'
 
@@ -50,7 +51,9 @@ export class LinksController {
         @Res() res: Response,
         @ClientIp() ip: string
     ): Promise<void> {
-        const originalUrl = await this.linksService.getOriginalUrl(shortUrl, ip)
+        const originalUrl = await this.linksService.getOriginalUrl(
+            new GetOriginalUrlCommand(shortUrl, ip)
+        )
 
         return res.redirect(originalUrl)
     }

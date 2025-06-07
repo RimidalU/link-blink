@@ -9,6 +9,7 @@ import { LinkRepository } from './ports/links.repository'
 import { generateAlias } from './utils/generate-alias'
 import { AliasAlreadyInUseException } from './exception/alias-already-in-use.exception'
 import { LinkNotFoundException } from './exception/link-not-found.exception'
+import { GetOriginalUrlCommand } from './commands/get-original-url.command'
 
 @Injectable()
 export class LinksService {
@@ -38,8 +39,10 @@ export class LinksService {
         return this.linkRepository.create(newLink)
     }
 
-    async getOriginalUrl(alias: string, ip: string): Promise<string> {
-        //TODO: add Commands
+    async getOriginalUrl(
+        getOriginalUrlDTO: GetOriginalUrlCommand
+    ): Promise<string> {
+        const { alias, ip } = getOriginalUrlDTO
         const link = await this.linkRepository.getOriginalUrl(alias, ip)
 
         if (!link) {
