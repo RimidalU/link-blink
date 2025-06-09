@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common'
 import { LinkInfoDto } from '../presenters/http/dto/link-info.dto'
 import { AnalyticsDto } from '../presenters/http/dto/analytics.dto'
 import { LinkFactory } from '../domain/factories/link-factory'
+import { LinkClickFactory } from '../domain/factories/link-click-factory'
 
 import { CreateLinkCommand } from './commands/create-link.command'
 import { LinkRepository } from './ports/links.repository'
@@ -13,12 +14,15 @@ import { GetOriginalUrlCommand } from './commands/get-original-url.command'
 import { GetLinkInfoCommand } from './commands/get-link-info.command'
 import { DeleteLinkCommand } from './commands/delete-link.command'
 import { GetLinkAnalyticsCommand } from './commands/get-link-analytics.command'
+import { LinkClicksRepository } from './ports/link-clicks.repository'
 
 @Injectable()
 export class LinksService {
     constructor(
         private readonly linkRepository: LinkRepository,
-        private readonly linkFactory: LinkFactory
+        private readonly linkClicksRepository: LinkClicksRepository,
+        private readonly linkFactory: LinkFactory,
+        private readonly linkClickFactory: LinkClickFactory
     ) {}
     async createLink(createLinkDto: CreateLinkCommand): Promise<string> {
         let { alias } = createLinkDto
@@ -51,6 +55,12 @@ export class LinksService {
         if (!link) {
             throw new LinkNotFoundException(alias)
         }
+
+        const newLinkClick = this.linkClickFactory.create({
+            alias,
+            ip,
+        })
+        await this.linkClicksRepository.create(newLinkClick)
 
         return link.originalUrl
     }
