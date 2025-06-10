@@ -11,17 +11,7 @@ export class LinkFactory {
         const { alias, originalUrl, expiresAt } = params
         const id = -1
         const createdAt = new Date()
-        const clickCount = 0
-        const lastIps: string[] = []
 
-        return new Link(
-            id,
-            alias,
-            originalUrl,
-            createdAt,
-            clickCount,
-            lastIps,
-            expiresAt
-        )
+        return new Link(id, alias, originalUrl, createdAt, expiresAt)
     }
 }
