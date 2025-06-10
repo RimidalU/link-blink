@@ -7,9 +7,10 @@ export class LinkClickMapper {
     static toDomain(linkClickEntity: LinkClickEntity): LinkClick {
         return new LinkClick(
             linkClickEntity.id,
-            linkClickEntity.alias,
             linkClickEntity.ipAddress,
-            linkClickEntity.createdAt
+            linkClickEntity.createdAt,
+
+            linkClickEntity.link
         )
     }
 
@@ -17,7 +18,7 @@ export class LinkClickMapper {
     static toPersistence(linkClick: LinkClick): LinkClickEntity {
         const entity = new LinkClickEntity()
         entity.id = linkClick.id
-        entity.alias = linkClick.alias
+        entity.link = linkClick.link
         entity.ipAddress = linkClick.ipAddress
         entity.createdAt = linkClick.createdAt
 

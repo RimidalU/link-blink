@@ -1,6 +1,7 @@
 import { Link } from '@src/links/domain/link'
 import { LinkInfoDto } from '@src/links/presenters/http/dto/link-info.dto'
 import { AnalyticsDto } from '@src/links/presenters/http/dto/analytics.dto'
+import { OriginalUrlDto } from '@src/links/presenters/http/dto/original-url.dto'
 
 import { LinkEntity } from '../in-memory/entities/link.entities'
 
@@ -12,8 +13,6 @@ export class LinkMapper {
             linkEntity.alias,
             linkEntity.originalUrl,
             linkEntity.createdAt,
-            linkEntity.clickCount,
-            linkEntity.lastIps,
             linkEntity.expiresAt
         )
     }
@@ -25,9 +24,7 @@ export class LinkMapper {
         entity.alias = link.alias
         entity.originalUrl = link.originalUrl
         entity.createdAt = link.createdAt
-        entity.clickCount = link.clickCount
         entity.expiresAt = link.expiresAt
-        entity.lastIps = link.lastIps
 
         return entity
     }
@@ -38,19 +35,28 @@ export class LinkMapper {
     }
 
     // Domain → LinkInfoDto
-    static toInfoDto(link: Link): LinkInfoDto {
+    static toInfoDto(
+        originalUrl: string,
+        createdAt: Date,
+        clickCount: number
+    ): LinkInfoDto {
         return {
-            originalUrl: link.originalUrl,
-            createdAt: link.createdAt,
-            clickCount: link.clickCount,
+            originalUrl,
+            createdAt,
+            clickCount,
         }
     }
 
     // Domain → AnalyticsDto
-    static toAnalyticsDto(link: Link): AnalyticsDto {
+    static toAnalyticsDto(clickCount: number, lastIps: string[]): AnalyticsDto {
         return {
-            clickCount: link.clickCount,
-            lastIps: link.lastIps ?? [],
+            clickCount,
+            lastIps,
         }
+    }
+
+    // Domain → OriginalUrl
+    static toOriginalUrl(link: Link): OriginalUrlDto {
+        return { originalUrl: link.originalUrl, id: link.id }
     }
 }
