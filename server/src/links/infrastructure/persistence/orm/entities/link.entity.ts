@@ -3,7 +3,10 @@ import {
     Entity,
     PrimaryGeneratedColumn,
     CreateDateColumn,
+    OneToMany,
 } from 'typeorm'
+
+import { LinkClickEntity } from './link-click.entity'
 
 @Entity('links')
 export class LinkEntity {
@@ -19,12 +22,9 @@ export class LinkEntity {
     @CreateDateColumn()
     createdAt: Date
 
-    @Column({ default: 0 })
-    clickCount: number
-
-    @Column('text', { array: true, nullable: true })
-    lastIps?: string[]
-
     @Column({ nullable: true })
     expiresAt?: Date
+
+    @OneToMany(() => LinkClickEntity, (click) => click.link)
+    clicks: LinkClickEntity[]
 }

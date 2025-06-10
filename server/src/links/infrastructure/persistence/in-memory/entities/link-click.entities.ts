@@ -1,6 +1,8 @@
+import { LinkEntity } from './link.entities'
+
 export class LinkClickEntity {
     id: number
-    alias: string
+    link: LinkEntity
     ipAddress: string
     createdAt: Date
 }

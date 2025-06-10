@@ -3,7 +3,5 @@ export class LinkEntity {
     alias: string
     originalUrl: string
     createdAt: Date
-    clickCount: number
-    lastIps?: string[]
     expiresAt?: Date
 }
