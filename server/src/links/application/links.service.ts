@@ -50,16 +50,17 @@ export class LinksService {
         getOriginalUrlDTO: GetOriginalUrlCommand
     ): Promise<string> {
         const { alias, ip } = getOriginalUrlDTO
-        const link = await this.linkRepository.getOriginalUrl(alias, ip)
+        const link = await this.linkRepository.findByAlias(alias)
 
         if (!link) {
             throw new LinkNotFoundException(alias)
         }
 
         const newLinkClick = this.linkClickFactory.create({
-            alias,
             ip,
+            link,
         })
+
         await this.linkClicksRepository.create(newLinkClick)
 
         return link.originalUrl
@@ -69,7 +70,7 @@ export class LinksService {
         getLinkInfoDTO: GetLinkInfoCommand
     ): Promise<LinkInfoDto> {
         const { alias } = getLinkInfoDTO
-        const link = await this.linkRepository.findByAlias(alias)
+        const link = await this.linkRepository.getInfo(alias)
         if (!link) {
             throw new LinkNotFoundException(alias)
         }
@@ -85,7 +86,8 @@ export class LinksService {
         getLinkAnalyticsDTO: GetLinkAnalyticsCommand
     ): Promise<AnalyticsDto> {
         const { alias } = getLinkAnalyticsDTO
-        const link = await this.linkRepository.findByAlias(alias)
+        const link = await this.linkRepository.getAnalytics(alias)
+
         if (!link) {
             throw new LinkNotFoundException(alias)
         }
