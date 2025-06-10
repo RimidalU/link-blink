@@ -32,4 +32,30 @@ export class InMemoryLinkClickRepository implements LinkClicksRepository {
             throw new InternalServerException()
         }
     }
+
+    async countByLinkId(linkId: number): Promise<number> {
+        try {
+            const count = Array.from(this.linkClicks.values()).filter(
+                (c) => c.link.id === linkId
+            ).length
+
+            return await Promise.resolve(count)
+        } catch {
+            throw new InternalServerException()
+        }
+    }
+
+    async getLastIpsByLinkId(linkId: number, limit: number): Promise<string[]> {
+        try {
+            const lastIps = Array.from(this.linkClicks.values())
+                .filter((c) => c.link.id === linkId)
+                .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+                .map((c) => c.ipAddress)
+                .slice(0, limit)
+
+            return await Promise.resolve(lastIps)
+        } catch {
+            throw new InternalServerException()
+        }
+    }
 }

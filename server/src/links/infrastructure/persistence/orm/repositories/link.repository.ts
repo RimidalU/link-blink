@@ -5,6 +5,7 @@ import { Link } from '@src/links/domain/link'
 import { AnalyticsDto } from '@src/links/presenters/http/dto/analytics.dto'
 import { LinkInfoDto } from '@src/links/presenters/http/dto/link-info.dto'
 import { LinkRepository } from '@src/links/application/ports/links.repository'
+import { LinkClicksRepository } from '@src/links/application/ports/link-clicks.repository'
 
 import { LinkNotFoundException } from '../../exception/link-not-found.exception'
 import { InternalServerException } from '../../exception/internal-server-exception.exception'
@@ -15,7 +16,8 @@ import { LinkMapper } from '../../mappers/link.mapper'
 export class TypeOrmLinkRepository implements LinkRepository {
     constructor(
         @InjectRepository(LinkEntity)
-        private readonly repository: Repository<LinkEntity>
+        private readonly repository: Repository<LinkEntity>,
+        private readonly linkClicksRepository: LinkClicksRepository
     ) {}
 
     async create(link: Link): Promise<string> {
@@ -33,9 +35,19 @@ export class TypeOrmLinkRepository implements LinkRepository {
 
     async findByAlias(alias: string): Promise<Link | null> {
         try {
-            const linkEntity = await this.repository.findOne({
-                where: { alias },
-            })
+            const linkEntity = await this.repository.findOneBy({ alias })
+            if (!linkEntity) {
+                return null
+            }
+            return LinkMapper.toDomain(linkEntity)
+        } catch {
+            throw new InternalServerException()
+        }
+    }
+
+    async findByLinkId(linkId: number): Promise<Link | null> {
+        try {
+            const linkEntity = await this.repository.findOneBy({ id: linkId })
             if (!linkEntity) {
                 return null
             }
@@ -67,38 +79,18 @@ export class TypeOrmLinkRepository implements LinkRepository {
             if (!linkEntity) {
                 throw new LinkNotFoundException(alias)
             }
-            return LinkMapper.toInfoDto(linkEntity)
+            const clickCount = await this.linkClicksRepository.countByLinkId(
+                linkEntity.id
+            )
+            return LinkMapper.toInfoDto(
+                linkEntity.originalUrl,
+                linkEntity.createdAt,
+                clickCount
+            )
         } catch (error) {
             if (error instanceof LinkNotFoundException) {
                 throw error
             }
-            throw new InternalServerException()
-        }
-    }
-    async getOriginalUrl(alias: string, ip: string): Promise<Link | null> {
-        try {
-            const updateLastIpsSql = `(array_prepend(:ip, COALESCE("lastIps", '{}')))[1:5]`
-
-            const result = await this.repository
-                .createQueryBuilder()
-                .update(LinkEntity)
-                .set({
-                    clickCount: () => `"clickCount" + 1`,
-                    lastIps: () => updateLastIpsSql,
-                })
-                .where('alias = :alias', { alias })
-                .setParameters({ ip })
-                .returning('*')
-                .execute()
-
-            const updatedEntities = result.raw as LinkEntity[]
-            const updatedEntity = updatedEntities[0]
-
-            if (!updatedEntity) {
-                return null
-            }
-            return LinkMapper.toDomain(updatedEntity)
-        } catch {
             throw new InternalServerException()
         }
     }
@@ -109,9 +101,15 @@ export class TypeOrmLinkRepository implements LinkRepository {
             if (!link) {
                 throw new LinkNotFoundException(alias)
             }
+            const clickCount = await this.linkClicksRepository.countByLinkId(
+                link.id
+            )
+            const lastIps = await this.linkClicksRepository.getLastIpsByLinkId(
+                link.id
+            )
             return {
-                clickCount: link.clickCount,
-                lastIps: link.lastIps || [],
+                clickCount,
+                lastIps,
             }
         } catch (error) {
             if (error instanceof LinkNotFoundException) {

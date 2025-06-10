@@ -1,0 +1,1 @@
+export const ANALYTICS_LAST_IPS_LIMIT = 5
