@@ -11,6 +11,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 ![TypeORM](https://img.shields.io/badge/TypeORM-FE0803.svg?style=for-the-badge&logo=typeorm&logoColor=white)
+[![Redis](https://img.shields.io/badge/Redis-DC382D.svg?style=for-the-badge&logo=redis&logoColor=white)](https://redis.io/)
 [![Husky](https://img.shields.io/badge/Husky-5D3A00?style=for-the-badge&logo=git&logoColor=white)](https://typicode.github.io/husky/)
 [![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)](https://eslint.org/)
 [![Prettier](https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=black)](https://prettier.io/)
@@ -37,6 +38,7 @@ The project utilizes modern web technologies and follows best practices for code
 > - **Node.js** and **NestJS** for server and routing
 > - **TypeScript** for type safety and modern JS features
 > - **PostgreSQL** with **TypeORM** for relational database management
+> - **Redis** for caching and session management
 > - **Husky**, **ESLint**, **Prettier**, **Commitlint** for code quality and git hooks
 
 ### Architectural Patterns:
@@ -45,6 +47,7 @@ The project utilizes modern web technologies and follows best practices for code
 > - **Repository Pattern**: Abstracts data access logic and provides a clean API for interacting with the database.
 > - **Service Layer**: Contains business logic and coordinates between repositories and controllers.
 > - **Controller Layer**: Handles HTTP requests and responses, delegating work to the service layer.
+> - **Caching**: Utilizes Redis for caching frequently accessed data, reducing the load on the database and improving performance.
 
 ## Project setup
 
@@ -53,17 +56,22 @@ The project utilizes modern web technologies and follows best practices for code
 
 ```
 Application environment
-NODE_ENV= # Application environment (e.g., development, production)
-API_PORT= # Server port (e.g., 4000)
-API_URL= # API base URL
+NODE_ENV=              # Application environment (e.g., development, production)
+API_PORT=              # Server port (e.g., 4000)
+API_URL=               # API base URL
 
 Database configuration
-TYPEORM_CONNECTION= # Database type (e.g., postgres)
-DATABASE_HOST= # Database host (e.g., localhost)
-DATABASE_PORT= # Database port (e.g., 5432)
-DATABASE_USER= # Database username
-DATABASE_PASSWORD= # Database password
-DATABASE_NAME= # Database name
+TYPEORM_CONNECTION=    # Database type (e.g., postgres)
+DATABASE_HOST=         # Database host (e.g., localhost)
+DATABASE_PORT=         # Database port (e.g., 5432)
+DATABASE_USER=         # Database username
+DATABASE_PASSWORD=     # Database password
+DATABASE_NAME=         # Database name
+
+# Cash (Redis) configuration
+REDIS_URL=       # Redis connection URL
+CACHE_TYPE=      # Cache type (e.g., redis, nest)
+CACHE_TTL=       # Cache TTL (e.g., 24 hours)
 ```
 
 - Once the dependencies are installed, you can run `npm run dev` to start the application.
@@ -108,6 +116,7 @@ DATABASE_NAME= # Database name
     │   ├── app.module.ts                   # Main application module
     │   ├── main.ts                         # Application entry point
     │   ├── common                          # Shared utilities and constants
+    │   │   ├── cache                       # Cache configuration and service
     │   │   ├── decorators                  # Custom decorators
     │   │   └── interfaces                  # Shared interfaces
     │   ├── configs                         # Configuration files
@@ -152,6 +161,7 @@ DATABASE_NAME= # Database name
 - Link redirection with analytics tracking
 - View link analytics and information
 - Data validation and error handling
+- Caching using Redis
 - Code quality enforced by ESLint, Prettier, Husky, and Commitlint
 
 ## Project Status
