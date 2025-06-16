@@ -95,7 +95,7 @@ export class LinksService {
         if (!link) {
             throw new LinkNotFoundException(alias)
         }
-        return await this.linkRepository.getInfo(alias)
+        return link
     }
 
     async deleteLink(deleteLinkDTO: DeleteLinkCommand): Promise<string> {
@@ -113,6 +113,6 @@ export class LinksService {
             throw new LinkNotFoundException(alias)
         }
 
-        return await this.linkRepository.getAnalytics(alias)
+        return link
     }
 }
