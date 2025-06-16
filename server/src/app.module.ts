@@ -8,6 +8,8 @@ import { getConfigModuleConfig } from './configs/getConfigModuleConfig'
 import { ApplicationBootstrapOptions } from './common/interfaces/application-bootstrap-options'
 import { LinksInfrastructureModule } from './links/infrastructure/persistence/links-infrastructure.module'
 import { DatabaseModule } from './database/database.module'
+import { CacheModule } from './common/cache/cache.module'
+import { CacheInfrastructureModule } from './common/cache/persistence/cache-infrastructure.module'
 
 @Module({
     imports: [ConfigModule.forRoot(getConfigModuleConfig()), DatabaseModule],
@@ -20,7 +22,10 @@ export class AppModule {
             module: AppModule,
             imports: [
                 LinksModule.withInfrastructure(
-                    LinksInfrastructureModule.use(options.driver)
+                    LinksInfrastructureModule.use(options.DBdriver)
+                ),
+                CacheModule.withInfrastructure(
+                    CacheInfrastructureModule.use(options.cacheDriver)
                 ),
             ],
         }

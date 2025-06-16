@@ -10,12 +10,13 @@ import { LinksService } from './links.service'
 @Module({
     controllers: [LinksController],
     providers: [LinksService, LinkFactory, LinkClickFactory],
+    imports: [ConfigModule],
 })
 export class LinksModule {
     static withInfrastructure(linksInfrastructureModule: Type | DynamicModule) {
         return {
             module: LinksModule,
-            imports: [ConfigModule, linksInfrastructureModule],
+            imports: [linksInfrastructureModule],
         }
     }
 }
