@@ -37,9 +37,16 @@ export class LinksService {
         if (!alias) {
             alias = generateAlias()
         } else {
-            const exists = await this.linkRepository.findByAlias(alias)
-            if (exists) {
-                throw new AliasAlreadyInUseException(alias)
+            const existingLink = await this.linkRepository.findByAlias(alias)
+            if (existingLink) {
+                if (
+                    existingLink.expiresAt &&
+                    existingLink.expiresAt <= new Date()
+                ) {
+                    await this.linkRepository.deleteByAlias(alias)
+                } else {
+                    throw new AliasAlreadyInUseException(alias)
+                }
             }
         }
 
@@ -61,17 +68,25 @@ export class LinksService {
         let link: Link | null
 
         const cachedLinkJson = await this.cacheRepository.get(cacheKey)
-
         if (!cachedLinkJson) {
             link = await this.linkRepository.findByAlias(alias)
             if (!link) {
                 throw new LinkNotFoundException(alias)
             }
 
+            if (link.expiresAt && link.expiresAt <= new Date()) {
+                await this.linkRepository.deleteByAlias(alias)
+                throw new LinkNotFoundException(alias)
+            }
+
+            const ttl = link.expiresAt
+                ? Math.ceil((link.expiresAt.getTime() - Date.now()) / 1000)
+                : REDIRECT_CACHE_TTL
+
             await this.cacheRepository.set(
                 cacheKey,
                 LinkCacheMapper.toJSON(link),
-                REDIRECT_CACHE_TTL //TODO: refactor from link entity
+                ttl
             )
         } else {
             link = LinkCacheMapper.fromJSON(cachedLinkJson)
