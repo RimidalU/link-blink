@@ -12,6 +12,7 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 ![TypeORM](https://img.shields.io/badge/TypeORM-FE0803.svg?style=for-the-badge&logo=typeorm&logoColor=white)
 [![Redis](https://img.shields.io/badge/Redis-DC382D.svg?style=for-the-badge&logo=redis&logoColor=white)](https://redis.io/)
+[![BullMQ](https://img.shields.io/badge/BullMQ-FFD700.svg?style=for-the-badge&logo=bullmq&logoColor=black)](https://docs.bullmq.io/)
 [![Husky](https://img.shields.io/badge/Husky-5D3A00?style=for-the-badge&logo=git&logoColor=white)](https://typicode.github.io/husky/)
 [![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)](https://eslint.org/)
 [![Prettier](https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=black)](https://prettier.io/)
@@ -39,6 +40,7 @@ The project utilizes modern web technologies and follows best practices for code
 > - **TypeScript** for type safety and modern JS features
 > - **PostgreSQL** with **TypeORM** for relational database management
 > - **Redis** for caching and session management
+> - **BullMQ** for message queue management
 > - **Husky**, **ESLint**, **Prettier**, **Commitlint** for code quality and git hooks
 
 ### Architectural Patterns:
@@ -48,6 +50,7 @@ The project utilizes modern web technologies and follows best practices for code
 > - **Service Layer**: Contains business logic and coordinates between repositories and controllers.
 > - **Controller Layer**: Handles HTTP requests and responses, delegating work to the service layer.
 > - **Caching**: Utilizes Redis for caching frequently accessed data, reducing the load on the database and improving performance.
+> - **Message Queue**: Utilizes BullMQ for message queue management and handling background tasks.
 
 ## Project setup
 
@@ -117,6 +120,7 @@ CACHE_TTL=       # Cache TTL (e.g., 24 hours)
     │   ├── main.ts                         # Application entry point
     │   ├── common                          # Shared utilities and constants
     │   │   ├── cache                       # Cache configuration and service
+    │   │   ├── queue                       # Queue configuration and service
     │   │   ├── decorators                  # Custom decorators
     │   │   └── interfaces                  # Shared interfaces
     │   ├── configs                         # Configuration files
@@ -162,6 +166,7 @@ CACHE_TTL=       # Cache TTL (e.g., 24 hours)
 - View link analytics and information
 - Data validation and error handling
 - Caching using Redis
+- Queueing using BullMQ
 - Code quality enforced by ESLint, Prettier, Husky, and Commitlint
 
 ## Project Status
