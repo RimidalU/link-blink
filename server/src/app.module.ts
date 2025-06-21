@@ -1,4 +1,4 @@
-import { DynamicModule, Module } from '@nestjs/common'
+import { DynamicModule, Module, Type } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 
 import { AppController } from './app.controller'
@@ -10,24 +10,31 @@ import { LinksInfrastructureModule } from './links/infrastructure/persistence/li
 import { DatabaseModule } from './database/database.module'
 import { CacheModule } from './common/cache/cache.module'
 import { CacheInfrastructureModule } from './common/cache/persistence/cache-infrastructure.module'
+import { QueueModule } from './common/queue/queue.module'
 
 @Module({
-    imports: [ConfigModule.forRoot(getConfigModuleConfig()), DatabaseModule],
+    imports: [
+        ConfigModule.forRoot(getConfigModuleConfig()),
+        DatabaseModule,
+        QueueModule,
+    ],
     controllers: [AppController],
     providers: [AppService],
 })
 export class AppModule {
     static register(options: ApplicationBootstrapOptions): DynamicModule {
+        const importsArray: (Type<any> | DynamicModule)[] = [
+            LinksModule.withInfrastructure(
+                LinksInfrastructureModule.use(options.DBdriver)
+            ),
+            CacheModule.withInfrastructure(
+                CacheInfrastructureModule.use(options.cacheDriver)
+            ),
+        ]
+
         return {
             module: AppModule,
-            imports: [
-                LinksModule.withInfrastructure(
-                    LinksInfrastructureModule.use(options.DBdriver)
-                ),
-                CacheModule.withInfrastructure(
-                    CacheInfrastructureModule.use(options.cacheDriver)
-                ),
-            ],
+            imports: importsArray,
         }
     }
 }
