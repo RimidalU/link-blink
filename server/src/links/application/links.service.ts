@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { CacheRepository } from '@src/common/cache/ports/cache.repository'
+import { InjectQueue } from '@nestjs/bullmq'
+import { Queue } from 'bullmq'
 
 import { LinkInfoDto } from '../presenters/http/dto/link-info.dto'
 import { AnalyticsDto } from '../presenters/http/dto/analytics.dto'
@@ -7,6 +9,7 @@ import { LinkFactory } from '../domain/factories/link-factory'
 import { LinkClickFactory } from '../domain/factories/link-click-factory'
 import { Link } from '../domain/link'
 import { LinkCacheMapper } from '../infrastructure/persistence/mappers/link-cash.mapper'
+import { SERVICE_NAME } from '../constants/service.constants'
 
 import { CreateLinkCommand } from './commands/create-link.command'
 import { LinkRepository } from './ports/links.repository'
@@ -17,7 +20,6 @@ import { GetOriginalUrlCommand } from './commands/get-original-url.command'
 import { GetLinkInfoCommand } from './commands/get-link-info.command'
 import { DeleteLinkCommand } from './commands/delete-link.command'
 import { GetLinkAnalyticsCommand } from './commands/get-link-analytics.command'
-import { LinkClicksRepository } from './ports/link-clicks.repository'
 
 const REDIRECT_CACHE_TTL = 24 * 60 * 60 * 1000 //  24 hours
 
@@ -25,10 +27,11 @@ const REDIRECT_CACHE_TTL = 24 * 60 * 60 * 1000 //  24 hours
 export class LinksService {
     constructor(
         private readonly linkRepository: LinkRepository,
-        private readonly linkClicksRepository: LinkClicksRepository,
         private readonly linkFactory: LinkFactory,
         private readonly linkClickFactory: LinkClickFactory,
-        private readonly cacheRepository: CacheRepository
+        private readonly cacheRepository: CacheRepository,
+        @InjectQueue(SERVICE_NAME)
+        private readonly linksQueue: Queue
     ) {}
     async createLink(createLinkDto: CreateLinkCommand): Promise<string> {
         let { alias } = createLinkDto
@@ -97,7 +100,7 @@ export class LinksService {
             link,
         })
 
-        await this.linkClicksRepository.create(newLinkClick)
+        this.linksQueue.add('saveLinkClick', newLinkClick)
 
         return link.originalUrl
     }
