@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsString, IsNumber } from 'class-validator'
+import { IsString, IsNumber, IsNotEmpty } from 'class-validator'
 
 export class OriginalUrlDto {
     @ApiProperty({
@@ -7,6 +7,7 @@ export class OriginalUrlDto {
         description: 'The id of the link',
     })
     @IsNumber()
+    @IsNotEmpty()
     id: number
 
     @ApiProperty({
@@ -14,5 +15,6 @@ export class OriginalUrlDto {
         description: 'The original URL of the link',
     })
     @IsString()
+    @IsNotEmpty()
     originalUrl: string
 }
