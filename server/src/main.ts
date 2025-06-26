@@ -8,7 +8,7 @@ import { initSwagger } from './app.swagger'
 async function bootstrap() {
     const app = await NestFactory.create(
         AppModule.register({
-            DBdriver: 'in-memory',
+            DBdriver: 'orm',
             cacheDriver: 'redis',
         })
     )
