@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsString, IsDate, IsNumber } from 'class-validator'
+import { IsString, IsDate, IsNumber, IsNotEmpty } from 'class-validator'
 
 export class LinkInfoDto {
     @ApiProperty({
@@ -7,6 +7,7 @@ export class LinkInfoDto {
         description: 'The original URL of the link',
     })
     @IsString()
+    @IsNotEmpty()
     originalUrl: string
 
     @ApiProperty({
@@ -14,6 +15,7 @@ export class LinkInfoDto {
         description: 'The creation date of the link',
     })
     @IsDate()
+    @IsNotEmpty()
     createdAt: Date
 
     @ApiProperty({
@@ -21,5 +23,6 @@ export class LinkInfoDto {
         description: 'The number of clicks on the link',
     })
     @IsNumber()
+    @IsNotEmpty()
     clickCount: number
 }
