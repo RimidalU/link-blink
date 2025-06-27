@@ -1,6 +1,6 @@
 export class UpdateEmailCommand {
     constructor(
-        public readonly id: string,
+        public readonly id: number,
         public readonly email: string
     ) {}
 }
